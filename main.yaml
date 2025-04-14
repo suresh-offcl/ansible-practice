@@ -1,0 +1,7 @@
+name: "configuring {{ component }} server"
+hosts: all
+become: yes #remote server
+vars_files:
+- "variables-{{ environment }}.yaml"
+roles:
+- "{{ component }}"
