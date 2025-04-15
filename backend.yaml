@@ -49,10 +49,10 @@
         chdir: /app
     
     - name: "configuring backend.service in a file"
-      ansible.builtin.file:
+      ansible.builtin.copy:
         src: backend.service
         dest: /etc/systemd/system/backend.service
 
     - name: "loading schema"
       community.mysql.mysql_db:
-      
+
