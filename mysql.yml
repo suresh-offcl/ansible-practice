@@ -19,7 +19,7 @@
   #Acutally directly connecting to mysql server and setting/ changing root password , 1st check whether the login host is there 
   - name: "connecting to mysql server"
     community.mysql.mysql_info:
-      login_user: "root"
+      login_user: root
       login_host: "{{ login_host }}"
       login_password: "{{ login_password }}"
     ignore_errors: true
@@ -30,7 +30,6 @@
       msg: "{{ mysql_info }}"
   
   - name: "setup mysql root password"
-    ansible.builtin.command: "mysql_secure_installation --set-root-pass ExpenseApp@1"
+    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ login_password }}"
     when: mysql_info.failed is true
 
-    
