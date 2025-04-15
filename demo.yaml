@@ -1,0 +1,22 @@
+- name: "creating ec2 instances and r53 records"
+  hosts: web
+  become: yes
+  vars:
+    subnet_id: "subnet-03f08bdcb40e9e725"
+    ami_id: "ami-09c813fb71547fc4f"
+    sg_id: "sg-02aa5635332d4841f"
+    instances:
+    - "mysql"
+    - "frontend"
+    - "backend"
+    zone_id: "Z10192312YWL9AAQ8B02Q"
+  tasks:
+  #creating ec2instances
+  - name: "creating ec2instancess"
+    amazon.aws.ec2_instance:
+      vpc_subnet_id: "{{ subnet_id }}"
+      instance_type: "t3.micro"
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+    loop: "{{ instances }}"
+    register: "ec2_instances"
