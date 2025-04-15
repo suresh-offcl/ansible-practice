@@ -1,6 +1,10 @@
 - name: "configuring backend "
   hosts: backend
   become: yes
+  vars:
+    login_host: "backend.khanishkcosmetics.store"
+    login_password: "ExpenseApp@1"
+    login_user: "root"
   tasks:
     - name: "disabling current nodejs version"
       ansible.builtin.command: dnf module disable nodejs -y
@@ -53,6 +57,26 @@
         src: backend.service
         dest: /etc/systemd/system/backend.service
 
+    - name: ansible to install pymysql
+      ansible.builtin.pip:
+        name:
+        - PyMySQL
+        - cryptography
+        executable: pip3.9
+
     - name: "loading schema"
       community.mysql.mysql_db:
+        login_host: "{{ login }}"
+        login_password: "{{ login_password }}"
+        login_user: "{{ login_user }}"
+        target: /app/schema/backend.sql
+        name: all
+        state: import
+    
+    - name: daemon reload
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        state: restarted
+        name: backend
+
 
