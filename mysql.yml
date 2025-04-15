@@ -1,40 +1,42 @@
-- name: mysql configuration
+- name: "configuring the mysql server"
   hosts: mysql
   become: yes
   vars:
     login_host: "mysql.khanishkcosmetics.store"
     login_password: "ExpenseApp@1"
+    login_user: "root"
   tasks:
-  # Here we are installing mysql server in mysql.khanishkcostmeics.store which is created from demo.yaml
-  - name: install mysql-server
-    ansible.builtin.package:
-      name: mysql-server
-      state: present
-  - name: Install Python MySQL client (PyMySQL)
-    ansible.builtin.pip:
-      name: 
-      - PyMySQL
+    - name: ansible to install pymysql
+      ansible.builtin.pip:
+        name:
+        - PyMySQL
       executable: pip3.9
-  # Starting mysql server it's neccessary when u install a particular service and enabling also 
-  - name: starting mysqlserver
-    ansible.builtin.service:
-      name: mysqld
-      state: started
-      enabled: yes
-  #Acutally directly connecting to mysql server and setting/ changing root password , 1st check whether the login host is there 
-  - name: "connecting to mysql server"
-    community.mysql.mysql_info:
-      login_user: root
-      login_host: "{{ login_host }}"
-      login_password: "{{ login_password }}"
-    ignore_errors: true
-    register: mysql_info
-  
-  - name: "checking it is connected or not"
-    ansible.builtin.debug:
-      msg: "{{ mysql_info }}"
-  
-  - name: "setup mysql root password"
-    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ login_password }}"
-    when: mysql_info.failed is true
+
+    - name: "installing mysql servers"
+      ansible.builtin.package:
+        name: mysql-server
+        state: present
+    
+    - name: "starting and enabling mysql-server"
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: yes
+    
+    - name: "checking the root password is      setup/ not"
+      community.mysql.mysql_db:
+        login_host: "{{ login_host }}"
+        login_password: "{{ login_password }}"
+        login_user: "{{ login_user }}"
+      ignore_errors: true
+      register: mysql_info
+
+    - name: "printing mysql info"
+      ansible.builtin.debug:
+        msg: "{{ mysql_info }}"
+
+    - name: "setting root password if not setup"
+      ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password }}"
+      when: mysql_info.failed is true
+      
 
