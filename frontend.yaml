@@ -22,7 +22,7 @@
     - name: "downloading the content file"
       ansible.builtin.get_url:
         url: "https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip"
-        destination: /tmp/frontend.zip
+        dest: /tmp/frontend.zip
 
     - name: "extracting the zip file"  
       ansible.builtin.unarchive:
