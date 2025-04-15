@@ -50,7 +50,7 @@
         zone: "{{ zone }}"
         record: "{{ zone }}"
         type: A
-        value: "{{ item.instances[0].pUBLIC_ip_address }}"
+        value: "{{ item.instances[0].public_ip_address }}"
         wait: true
         overwrite: true
         ttl: 1
