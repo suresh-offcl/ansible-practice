@@ -12,3 +12,47 @@
       ansible.builtin.package:
         name: nodejs
         state: present
+    
+    - name: "checking is user exists"
+      ansible.builtin.command: id expense
+      ignore_errors: true
+      register: user
+
+    - name: "creating user if not exists"
+      ansible.builtin.command: useradd expense
+      when: user.rc != 0
+
+    - name: "removing app directory "
+      ansible.builtin.file:
+        path: /app
+        state: absent
+      ignore_errors: true
+    - name: "creating app directory"
+      ansible.builtin.file:
+        path: /app
+        state: directory
+
+    - name: "downloading content using url"
+      ansible.builtin.get_url:
+        url: "https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip"
+        dest: /tmp/backend.zip
+    
+    - name: "unzipping the backend code"
+      ansible.builtin.unarchive:
+        src: /tmp/backend.zip
+        dest: /app
+        remote_src: yes
+    
+    - name: install dependencies
+      ansible.builtin.command: npm install
+      args:
+        chdir: /app
+    
+    - name: "configuring backend.service in a file"
+      ansible.builtin.file:
+        src: backend.service
+        dest: /etc/systemd/system/backend.service
+
+    - name: "loading schema"
+      community.mysql.mysql_db:
+      
