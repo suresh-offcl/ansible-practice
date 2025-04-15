@@ -1,8 +1,0 @@
-- name: AWS Credentials Test
-  hosts: localhost
-  connection: local
-  gather_facts: no
-
-  tasks:
-    - name: Check who I am in AWS
-      amazon.aws.aws_caller_info:
