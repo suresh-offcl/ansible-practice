@@ -12,6 +12,12 @@
     zone_id: "Z10192312YWL9AAQ8B02Q"
   tasks:
   #creating ec2instances
+  - name: "installing dependencies boto3 botocore"
+    ansible.builtin.pip:
+      name:
+      - boto3
+      - botocore
+      executable: pip3.9
   - name: "creating ec2instancess"
     amazon.aws.ec2_instance:
       vpc_subnet_id: "{{ subnet_id }}"
