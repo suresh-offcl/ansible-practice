@@ -13,7 +13,7 @@
     aws_region: "us-east-1"
   tasks:
   #creating ec2instances
-  - name: "installing dependencies boto3 botocore"
+  - name: "installing dependencies boto3 botocores"
     ansible.builtin.pip:
       name:
       - boto3
