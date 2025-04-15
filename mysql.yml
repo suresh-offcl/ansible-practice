@@ -10,6 +10,11 @@
     ansible.builtin.package:
       name: mysql-server
       state: present
+  - name: Install Python MySQL client (PyMySQL)
+    ansible.builtin.pip:
+      name: 
+      - PyMySQL
+      executable: pip3.9
   # Starting mysql server it's neccessary when u install a particular service and enabling also 
   - name: starting mysqlserver
     ansible.builtin.service:
