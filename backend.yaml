@@ -1,0 +1,14 @@
+- name: "configuring backend "
+  hosts: backend
+  become: yes
+  tasks:
+    - name: "disabling current nodejs version"
+      ansible.builtin.command: dnf module disable nodejs -y
+
+    - name: "enabling 20 version nodejs"
+      ansible.builtin.command: dnf module enable nodejs:20 -y
+    
+    - name: "installing nodejs "
+      ansible.builtin.package:
+        name: nodejs
+        state: present
