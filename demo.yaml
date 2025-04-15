@@ -11,11 +11,16 @@
       - "mysql"
       - "frontend"
       - "backend"
-    zone_id: "Z10192312YWL9AAQ8B02Q"
+    zone: "khanishkcosmetics.store"
     region: "us-east-1"
 
   tasks:
-
+    - name: ansible to install boto3 and botocore
+      ansible.builtin.pip:
+        name:
+        - boto3
+        - botocore
+        executable: pip3.9
     - name: "Launch EC2 Instances"
       amazon.aws.ec2_instance:
         name: "{{ item }}"
@@ -27,3 +32,27 @@
         region: "{{ region }}"
       loop: "{{ instances }}"
       register: ec2_instances
+
+    - name: "creating r53 records"
+      amazon.aws.route53:
+        state: present
+        zone: "{{ zone }}"
+        record: "{{ item.item }}.{{ zone }}"
+        type: A
+        value: "{{ item.instances[0].private_ip_address }}"
+        wait: true
+        overwrite: true
+        ttl: 1
+      loop: "{{ ec2_instances.results }}"
+    - name: "creating r53 records"
+      amazon.aws.route53:
+        state: present
+        zone: "{{ zone }}"
+        record: "{{ zone }}"
+        type: A
+        value: "{{ item.instances[0].pUBLIC_ip_address }}"
+        wait: true
+        overwrite: true
+        ttl: 1
+      loop: "{{ ec2_instances.results }}"
+      when: item.item == "frontend"
