@@ -64,6 +64,11 @@
         - cryptography
         executable: pip3.9
 
+    - name: Install MySQL client
+      ansible.builtin.package:
+        name: mysql
+        state: present
+  
     - name: "loading schema"
       community.mysql.mysql_db:
         login_host: "{{ login_host }}"
