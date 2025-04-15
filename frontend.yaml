@@ -31,7 +31,7 @@
         remote_src: yes
     
     - name: "uploading the expense.config file into /etc/nginx/default.d/"
-      ansible.builtin.file:
+      ansible.builtin.copy:
         src:  expense.config
         dest: /etc/nginx/default.d/expense.config
     
