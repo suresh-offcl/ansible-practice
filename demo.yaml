@@ -10,6 +10,7 @@
     - "frontend"
     - "backend"
     zone_id: "Z10192312YWL9AAQ8B02Q"
+    aws_region: "us-east-1"
   tasks:
   #creating ec2instances
   - name: "installing dependencies boto3 botocore"
